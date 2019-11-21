@@ -1,0 +1,81 @@
+#! /usr/bin/python3
+
+import cgi
+import cgitb
+import MySQLdb
+import passwords
+
+cgitb.enable()
+
+print("Content-Type: text/html")
+print("Status: 200 OK")
+print()
+
+#----------------CGI part-------------#
+
+form = cgi.FieldStorage()
+
+if form.getvalue("seats"):
+    seats = form.getvalue("seats")
+else:
+    # default value 0
+    seats = 0; 
+
+
+#-------------SQL part------------------#
+conn = MySQLdb.connect(host = passwords.SQL_HOST,
+                        user = passwords.SQL_USER,
+                        passwd = passwords.SQL_PASSWD,
+                        db = "my_database")
+cursor = conn.cursor()
+    
+cursor.execute("SELECT * FROM cars WHERE seats= {};".format(seats))
+results = cursor.fetchall()
+cursor.close()
+
+
+
+print("""
+<html>
+<head>
+<title>Matching Fields</title>
+</head>
+<body>
+
+<center>
+<h1>Matching Fields</h1>""")
+
+if len(results) == 0:
+    print("<font color='red'>No Matching Records Found!</font>")
+else:
+    print("""
+    <table style="width:50%" cellpadding ="10" border = "1">
+    <caption><h2><b>Table: cars<b></h2></caption>
+    <col width="150">
+    <col width="150">
+    <col width="150">
+    <col width="150">
+    <tr>
+    <th>id</th>
+    <th>Brand</th>
+    <th>Model</th>
+    <th>Seats</th>
+     </tr>
+    """)
+    for line in results:
+        print("""
+        <tr>
+        <td>{}</td>
+        <td>{}</td>
+        <td>{}</td>
+        <td>{}</td>
+        </tr>
+        """.format(line[0],line[1],line[2],line[3]))
+
+print("""
+</table>
+</center>
+
+</body>
+</html>
+""")

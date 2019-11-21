@@ -1,0 +1,84 @@
+#! /usr/bin/python3
+
+import MySQLdb
+import passwords
+import cgi
+import cgitb
+
+cgitb.enable()
+
+print("Content-Type: text/html")
+print("Status: 200 OK")
+print()
+
+# create the connection. Of course, you can replace ’conn’ with any
+# variable name you like. The ’host’ is the DNS name of the DB instance;
+# the ’db’ is the database that you want to "USE" for this transaction.
+conn = MySQLdb.connect(host = passwords.SQL_HOST,
+user = passwords.SQL_USER,
+passwd = passwords.SQL_PASSWD,
+db = "my_database")
+# builds a single cursor. Note that, after we’ve finished this operation,
+# we can close this cursor and then build another cursor for another
+# operation, if we want. As always, the variable name on the left-hand
+# side here can be anything that you want.
+cursor = conn.cursor()
+# send an SQL command to the DB
+cursor.execute("SELECT * FROM cars;")
+# this is the way to get the results from a SELECT operation. It returns
+# a list (possibly empty) of tuples. Each tuple is a record, and each
+# element in the tuple a field. If you use *, then this is all of the
+# fields in the table, in an order determined by the DB. If you want to
+# limit the number of fields or set their order, then you can specify the
+# fields in the SELECT statement - and each tuple will model the order
+# that you’ve chosen.
+#
+# Note that other SQL statement types use other mechanisms to check status;
+# see below.
+results = cursor.fetchall()
+# once you’ve read the results into a local variable, we don’t need the
+# cursor anymore. Note that the connection object - and the transaction -
+# stay open.
+cursor.close()
+
+
+print("""
+<html>
+<head>
+<title>All Records</title>
+</head>
+<body>
+
+<center>
+<h1>All Records</h1>
+<table style="width:50%" cellpadding ="10" border = "1">
+<caption><h2><b>Table: cars<b></h2></caption>
+  <col width="150">
+  <col width="150">
+  <col width="150">
+  <col width="150">
+  <tr>
+    <th>id</th>
+    <th>Brand</th>
+    <th>Model</th>
+    <th>Seats</th>
+  </tr>
+""")
+
+for line in results:
+    print("""
+    <tr>
+    <td>{}</td>
+    <td>{}</td>
+    <td>{}</td>
+    <td>{}</td>
+    </tr>
+    """.format(line[0],line[1],line[2],line[3]))
+
+print("""
+</table
+</center>
+
+</body>
+</html>        
+""")

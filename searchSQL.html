@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<body>
+<header>
+	<title>searchSQL</title>	
+</header>	
+<center>
+<form action="/cgi-bin/allRecords" method="post">
+  <h2>Display All Records</h2>
+  <input type="submit" value="Display all records"><br>
+</form>
+<form action="/cgi-bin/matchingFields" method="post">
+  <h2>Search Records with Matching Fields</h2>
+   Number of seats:
+  <input type="text" name="seats">
+  <br><br>
+  <input type="submit" value="Search"><br>
+</form>
+<form action="/cgi-bin/modifyRecords" method="post">
+  <h2>Modify A Record By</h2>
+  Choose id:
+  <input type="text" name="lineID">
+  Number of seats:
+  <input type="text" name="seats">
+  <br><br>
+  <input type="submit" value="Modify"><br>
+</form>
+<form action="/cgi-bin/joinSearch" method="post">
+  <h2>Search Record By Join Table Together</h2>
+  Column Name From Table <b>cars</b>:
+  <input type="text" name="carsCol">
+  Column Name From Table <b>info</b>:
+  <input type="text" name="infoCol">
+  <br><br>
+  <input type="submit" value="Search"><br>
+</form>
+
+</center>
+
+</body>
+</html>

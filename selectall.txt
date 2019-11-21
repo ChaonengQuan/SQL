@@ -1,0 +1,12 @@
+MySQL [my_database]> SELECT * FROM cars;
++----+---------+----------+-------+
+| id | brand   | model    | seats |
++----+---------+----------+-------+
+|  1 | porsche | panamera |     4 |
+|  2 | ford    | explorer |     6 |
+|  3 | tesla   | modelx   |     6 |
+|  4 | audi    | r8       |     2 |
++----+---------+----------+-------+
+4 rows in set (0.00 sec)
+
+MySQL [my_database]> 

@@ -1,0 +1,66 @@
+#! /usr/bin/python3
+
+import cgi
+import MySQLdb
+import passwords
+import cgitb
+
+print("Content-Type: text/html")
+print("Status: 200 OK")
+print()
+
+cgitb.enable()
+
+form = cgi.FieldStorage()
+
+carsC = form.getvalue('carsCol')
+infoC = form.getvalue('infoCol')
+
+if carsC and infoC:
+    conn = MySQLdb.connect(host = passwords.SQL_HOST,
+    user = passwords.SQL_USER,
+    passwd = passwords.SQL_PASSWD,
+    db = "my_database")
+
+    cursor = conn.cursor()
+    cursor.execute("SELECT {},{} FROM cars INNER JOIN info ON cars.id = info.carsID;".format(carsC,infoC))
+    results = cursor.fetchall()
+    cursor.close()
+
+    print("""
+    <html>
+    <head>
+    <title>Join Search Records</title>
+    </head>
+    <body>
+    <center>
+    <h1>Join Search Records</h1>
+    <table style="width:50%" cellpadding ="10" border = "1">
+    <caption><h2><b>Table: cars<b></h2></caption>
+    <col width="150">
+    <col width="150">
+    <col width="150">
+    <col width="150">
+    <tr>
+    <th>{}</th>
+    <th>{}</th>
+    </tr>
+    """.format(carsC,infoC))
+
+    for line in results:
+        print("""
+        <tr>
+        <td>{}</td>
+        <td>{}</td>
+        </tr>
+        """.format(line[0],line[1]))
+
+    print("""
+    </table
+    </center>
+    </body>
+    </html>        
+    """)
+
+else:
+    print("Illegal aruguments")
